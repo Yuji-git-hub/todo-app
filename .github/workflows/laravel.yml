@@ -1,0 +1,56 @@
+name: Laravel CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testing
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root --password=root"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: 📥 リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: 🧰 PHP環境をセットアップ
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, bcmath, pdo, mysql
+
+      - name: 📦 Composerインストール
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: ⚙️ .env作成
+        run: cp .env.example .env
+
+      - name: 🔑 アプリキー生成
+        run: php artisan key:generate
+
+      - name: 🗃 マイグレーション実行
+        env:
+          DB_HOST: 127.0.0.1
+        run: php artisan migrate --force
+
+      - name: 🧪 テスト実行
+        env:
+          DB_HOST: 127.0.0.1
+        run: php artisan test
