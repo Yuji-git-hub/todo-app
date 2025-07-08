@@ -66,13 +66,9 @@ class TodoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(TodoUpdateRequest $request, string $id): RedirectResponse
+    public function update(TodoUpdateRequest $request, Todo $todo): RedirectResponse
     {
-        $validated = $request->valiate();
-
-        $todo = Todo::findOrFail($id);
-
-        $todo->update($validated);
+        $todo->update($request->validated());
 
         return redirect()->route('todos.index')->with('success', '更新しました');
     }
