@@ -53,4 +53,6 @@ jobs:
       - name: 🧪 テスト実行
         env:
           DB_HOST: 127.0.0.1
-        run: php artisan test
+        run: |
+          php artisan migrate --force
+          php artisan test
