@@ -13,4 +13,6 @@ class TodoController extends Controller
 
         return view('todos.index', ['todos' => $todos]);
     }
+
+    
 }
