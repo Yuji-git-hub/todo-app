@@ -7,4 +7,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/todos', [TodoController::class, 'index']);
+Route::get('/todos', [TodoController::class, 'index'])->name('todos.index');
+Route::post('/todos', [TodoController::class, 'store'])->name('todos.store');
