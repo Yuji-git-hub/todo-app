@@ -4,19 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TodoRequest;
 use App\Models\Todo;
+use Illuminate\Support\Facades\Auth;
 
 class TodoController extends Controller
 {
     public function index()
     {
-        $todos = Todo::all();
+        $todos = Auth::user()->todos;
 
         return view('todos.index', ['todos' => $todos]);
     }
 
     public function store(TodoRequest $request)
     {
-        Todo::create($request->validated());
+        Auth::user()->todos()->create([
+            'title' => $request->title,
+        ]);
 
         return redirect()->route('todos.index')
                          ->with('success', 'リストが作成されました。');
