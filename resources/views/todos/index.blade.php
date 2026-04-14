@@ -20,7 +20,7 @@
     </style>
 </head>
 <body>
-    <h1>Todo一覧</h1>
+    <h1>{{ Auth::user()->name }}さんのTodo一覧</h1>
 
     @if(session('success'))
         <div>
