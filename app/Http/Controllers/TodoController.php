@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TodoRequest;
 use App\Models\Todo;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 
 class TodoController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index()
     {
         $todos = Auth::user()->todos;
@@ -27,19 +30,25 @@ class TodoController extends Controller
 
     public function edit(Todo $todo)
     {
+        $this->authorize('update', $todo);
+
         return view('todos.edit', ['todo' => $todo]);
     }
 
     public function update(TodoRequest $request, Todo $todo)
     {
+        $this->authorize('update', $todo);
+
         $todo->update($request->validated());
 
         return redirect()->route('todos.index')
                          ->with('success', '更新されました。');
     }
 
-    public function delete(Todo $todo)
+    public function destroy(Todo $todo)
     {
+        $this->authorize('delete', $todo);
+
         $todo->delete();
 
         return redirect()->route('todos.index')
