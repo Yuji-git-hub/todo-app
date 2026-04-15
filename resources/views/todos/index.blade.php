@@ -45,14 +45,18 @@
             <tr>
                 <td class="todo-item">{{ $todo->title }}</td>
                 <td>
-                    <a href="{{ route('todos.edit', $todo) }}" class="btn">編集</a>
+                    @can('update', $todo)
+                        <a href="{{ route('todos.edit', $todo) }}" class="btn">編集</a>
+                    @endcan
                 </td>
                 <td>
-                    <form action="{{ route('todos.delete', $todo) }}" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">削除</button>
-                    </form>
+                    @can('delete', $todo)
+                        <form action="{{ route('todos.destroy', $todo) }}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit">削除</button>
+                        </form>
+                    @endcan
                 </td>
             </tr>
             @endforeach
