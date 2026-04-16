@@ -48,7 +48,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function todos()
+    public function todos(): HasMany
     {
         return $this->hasMany('App\Models\Todo');
     }
