@@ -5,20 +5,24 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TodoRequest;
 use App\Models\Todo;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class TodoController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index()
+    public function index(): View
     {
-        $todos = Auth::user()->todos;
+        $todos = Auth::user()->todos()
+            ->orderBy('is_completed', 'asc')
+            ->get();
 
         return view('todos.index', ['todos' => $todos]);
     }
 
-    public function store(TodoRequest $request)
+    public function store(TodoRequest $request): RedirectResponse
     {
         Auth::user()->todos()->create([
             'title' => $request->title,
@@ -28,14 +32,14 @@ class TodoController extends Controller
                          ->with('success', 'リストが作成されました。');
     }
 
-    public function edit(Todo $todo)
+    public function edit(Todo $todo): View
     {
         $this->authorize('update', $todo);
 
         return view('todos.edit', ['todo' => $todo]);
     }
 
-    public function update(TodoRequest $request, Todo $todo)
+    public function update(TodoRequest $request, Todo $todo): RedirectResponse
     {
         $this->authorize('update', $todo);
 
@@ -45,7 +49,7 @@ class TodoController extends Controller
                          ->with('success', '更新されました。');
     }
 
-    public function destroy(Todo $todo)
+    public function destroy(Todo $todo): RedirectResponse
     {
         $this->authorize('delete', $todo);
 
@@ -53,5 +57,17 @@ class TodoController extends Controller
 
         return redirect()->route('todos.index')
                          ->with('success', '削除されました。');
+    }
+
+    public function toggle(Todo $todo): RedirectResponse
+    {
+        $this->authorize('update', $todo);
+
+        $todo->update([
+            'is_completed' => !$todo->is_completed,
+        ]);
+
+        return redirect()->route('todos.index')
+                         ->with('success', 'ステータスを更新しました。');
     }
 }

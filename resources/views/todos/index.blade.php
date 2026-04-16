@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo一覧</title>
     <style>
+        table {
+            margin: 50px 0;
+        }
+        th {
+            padding: 5px 10px;
+            background-color: gray;
+            color: white;
+        }
+        td {
+            text-align: center;
+            border: solid 1px;
+            padding: 5px 10px;
+        }
         .todo-item::before {content: "・";}
         .btn {
             display: inline-block;
@@ -39,7 +52,11 @@
     <div>
         <table>
             <tr>
-                <th><h2>やることリスト</h2></th>
+                <th>Title</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Status</th>
+                <th></th>
             </tr>
             @foreach($todos as $todo)
             <tr>
@@ -57,6 +74,18 @@
                             <button type="submit">削除</button>
                         </form>
                     @endcan
+                </td>
+                <td style="background-color: {{ $todo->is_completed ? 'red' : 'lightgreen' }}">
+                    {{ $todo->is_completed ? '完了' : '未完了' }}
+                </td>
+                <td>
+                    <form action="{{ route('todos.toggle', $todo) }}" method="post">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit">
+                            {{ $todo->is_completed ? '未完了に戻す' : '完了にする' }}
+                        </button>
+                    </form>
                 </td>
             </tr>
             @endforeach
