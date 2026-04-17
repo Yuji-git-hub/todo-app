@@ -17,7 +17,7 @@ class TodoController extends Controller
     {
         $todos = Auth::user()->todos()
             ->orderBy('is_completed', 'asc')
-            ->get();
+            ->simplepaginate(10);
 
         return view('todos.index', ['todos' => $todos]);
     }
