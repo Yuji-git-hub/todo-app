@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo一覧</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-64UC4BEhTGwk3eGpak4nO2jqtl7liTS+juXkSJ2gPAQPmlClQO7s5UgCeR6US48g" crossorigin="anonymous">
     <style>
         table {
             margin: 50px 0;
@@ -90,6 +91,9 @@
             </tr>
             @endforeach
         </table>
+        <div class="d-flex justify-content-center">
+            {{ $todos->appends(request()->query())->links()  }}
+        </div>
     </div>
 </body>
 </html>
