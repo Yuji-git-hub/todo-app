@@ -6,6 +6,7 @@ use App\Http\Requests\TodoRequest;
 use App\Models\Todo;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -13,11 +14,16 @@ class TodoController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        $todos = Auth::user()->todos()
-            ->orderBy('is_completed', 'asc')
-            ->simplepaginate(10);
+        $query = Auth::user()->todos()
+            ->orderBy('is_completed', 'asc');
+
+        if($request->filled('keyword')) {
+            $query->where('title', 'like', '%' . $request->keyword . '%');
+        }
+
+        $todos = $query->simplePaginate(10)->withQueryString();
 
         return view('todos.index', ['todos' => $todos]);
     }
