@@ -23,6 +23,14 @@ class TodoController extends Controller
             $query->where('title', 'like', '%' . $request->keyword . '%');
         }
 
+        if($request->filled('status')) {
+            if($request->status === 'completed') {
+                $query->where('is_completed', 1);
+            } else if ($request->status === 'incomplete') {
+                $query->where('is_completed', 0);
+            }
+        }
+
         $todos = $query->simplePaginate(10)->withQueryString();
 
         return view('todos.index', ['todos' => $todos]);
