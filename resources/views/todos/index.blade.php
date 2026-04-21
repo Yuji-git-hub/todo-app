@@ -62,6 +62,13 @@
         <div style="display: flex; gap: 10px">
             <form action="{{ route('todos.index') }}" method="get">
                 <input type="text" name="keyword" value="{{ request('keyword') }}">
+
+                <select name="status">
+                    <option value="">すべて</option>
+                    <option value="incomplete" {{ request('status') === 'incomplete' ? 'selected' : '' }}>未完了</option>
+                    <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>完了</option>
+                </select>
+
                 <button type="submit">検索</button>
             </form>
             <form action="{{ route('todos.index') }}" method="get">
