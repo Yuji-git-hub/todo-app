@@ -43,6 +43,13 @@
 <body>
     <h1>{{ Auth::user()->name }}さんのTodo一覧</h1>
 
+    @auth
+        <form action="{{ route('logout') }}" method="post">
+            @csrf
+            <button type="submit">ログアウト</button>
+        </form>
+    @endauth
+
     @if(session('success'))
         <div>
             <p style="color: red">{{ session('success')}}</p>
