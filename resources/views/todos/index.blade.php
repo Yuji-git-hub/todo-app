@@ -69,10 +69,18 @@
                     <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>完了</option>
                 </select>
 
+                <select name="sort">
+                    <option value="">並び替え</option>
+                    <option value="created_desc">新しい順</option>
+                    <option value="created_asc">古い順</option>
+                    <option value="incomplete_first">未完了優先</option>
+                    <option value="completed_first">完了優先</option>
+                </select>
+
                 <button type="submit">検索</button>
             </form>
             <form action="{{ route('todos.index') }}" method="get">
-                <button type="submit">全件表示</button>
+                <button type="submit">リセット</button>
             </form>
         </div>
         <table>
