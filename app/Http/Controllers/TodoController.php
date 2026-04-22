@@ -16,8 +16,7 @@ class TodoController extends Controller
 
     public function index(Request $request): View
     {
-        $query = Auth::user()->todos()
-            ->orderBy('is_completed', 'asc');
+        $query = Auth::user()->todos();
 
         if($request->filled('keyword')) {
             $query->where('title', 'like', '%' . $request->keyword . '%');
@@ -29,6 +28,28 @@ class TodoController extends Controller
             } else if ($request->status === 'incomplete') {
                 $query->where('is_completed', 0);
             }
+        }
+
+        if($request->filled('sort')) {
+            switch($request->sort) {
+                case 'created_desc':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'created_asc':
+                    $query->orderBy('created_at', 'asc');
+                    break;
+                case 'incomplete_first':
+                    $query->orderBy('is_completed', 'asc')
+                          ->orderBy('created_at', 'desc');
+                    break;
+
+                case 'completed_first':
+                    $query->orderBy('is_completed', 'desc')
+                          ->orderBy('created_at', 'desc');
+                    break;
+            }
+        } else {
+            $query->orderBy('created_at', 'desc');
         }
 
         $todos = $query->simplePaginate(10)->withQueryString();
