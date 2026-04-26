@@ -37,7 +37,7 @@
                     作成
                 </button>
             </form>
-            <hr class="full-width-line">
+            <hr class="full-width-line mt-5">
         </div>
 
         <div class="flex gap-2 mb-6 items-center">
@@ -112,7 +112,8 @@
                             <form action="{{ route('todos.toggle', $todo) }}" method="post">
                                 @csrf
                                 @method('PATCH')
-                                <button type="submit">
+                                <button type="submit"
+                                    class="px-3 py-1 text-sm font-medium rounded-full transition bg-gray-200 text-gray-700 hover:bg-gray-200">
                                     {{ $todo->is_completed ? '未完了に戻す' : '完了にする' }}
                                 </button>
                             </form>
